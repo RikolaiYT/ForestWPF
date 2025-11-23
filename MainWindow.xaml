@@ -1,0 +1,81 @@
+<Window x:Class="ForestWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ForestWPF"
+        mc:Ignorable="d"
+        Title="Лес (Forest) — WPF" Height="600" Width="1200">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Left: Controls -->
+        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+            <TextBlock Text="Управление лесом" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                <Button Content="Загрузить хвойный" Command="{Binding LoadConiferousCommand}" Width="140" Margin="0,0,6,0"/>
+                <Button Content="Загрузить лиственный" Command="{Binding LoadDeciduousCommand}" Width="140"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,6,0,6">
+                <Button Content="Добавить дерево" Command="{Binding AddTreeCommand}" Width="140" Margin="0,0,6,0"/>
+                <Button Content="Удалить выбранное" Command="{Binding DeleteSelectedCommand}" Width="140"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,6,0,6">
+                <Label Content="Сортировка:" VerticalAlignment="Center"/>
+                <ComboBox Width="160" SelectedValue="{Binding SelectedSort}" ItemsSource="{Binding SortOptions}" Margin="6,0,0,0"/>
+                <Button Content="Применить" Command="{Binding SortCommand}" Width="80" Margin="6,0,0,0"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,6,0,6">
+                <Label Content="Поиск вида:" VerticalAlignment="Center"/>
+                <TextBox Width="160" Text="{Binding SearchSpecies, UpdateSourceTrigger=PropertyChanged}" Margin="6,0,0,0"/>
+                <Button Content="Найти" Command="{Binding SearchCommand}" Width="80" Margin="6,0,0,0"/>
+            </StackPanel>
+
+            <GroupBox Header="Метрики" Margin="0,12,0,0">
+                <StackPanel>
+                    <TextBlock Text="{Binding ConiferousInfo}" TextWrapping="Wrap" Margin="4"/>
+                    <TextBlock Text="{Binding DeciduousInfo}" TextWrapping="Wrap" Margin="4"/>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Действия" Margin="0,12,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Самое высокое" Command="{Binding ShowTallestCommand}" Width="120" Margin="4"/>
+                    <Button Content="Самое толстое" Command="{Binding ShowThickestCommand}" Width="120" Margin="4"/>
+                    <Button Content="Средние значения" Command="{Binding ShowAveragesCommand}" Width="140" Margin="4"/>
+                </StackPanel>
+            </GroupBox>
+
+            <TextBlock Text="Примечание: файлы .txt должны быть в формате: первая строка — площадь (float), далее строки: species height diameter age wood_type" TextWrapping="Wrap" Margin="0,12,0,0"/>
+        </StackPanel>
+
+        <!-- Right: DataGrid -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,6">
+                <RadioButton Content="Хвойный" IsChecked="{Binding IsConiferousSelected}" Margin="6"/>
+                <RadioButton Content="Лиственный" IsChecked="{Binding IsDeciduousSelected}" Margin="6"/>
+            </StackPanel>
+
+            <DataGrid Grid.Row="1" ItemsSource="{Binding SelectedTrees}" SelectedItem="{Binding SelectedTree}" AutoGenerateColumns="False" CanUserAddRows="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Вид" Binding="{Binding Species}" Width="*"/>
+                    <DataGridTextColumn Header="Высота (м)" Binding="{Binding Height}" Width="120"/>
+                    <DataGridTextColumn Header="Диаметр (см)" Binding="{Binding Diameter}" Width="120"/>
+                    <DataGridTextColumn Header="Возраст" Binding="{Binding Age}" Width="80"/>
+                    <DataGridTextColumn Header="Тип леса" Binding="{Binding WoodType}" Width="120"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>
